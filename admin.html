@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirana Admin Panel</title>
+    <style>
+        :root { --primary: #1b5e20; --bg: #FFD700; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 10px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary); }
+        .login-box { padding: 20px; text-align: center; }
+        .order-card { border: 2px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; background: #fffde7; }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
+        .item-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 3px; }
+        .total-bill { text-align: right; font-weight: bold; color: #d32f2f; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 5px; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 10px; }
+        button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="login-section" class="login-box">
+        <h2>দোকানদার লগইন</h2>
+        <input type="tel" id="admin-num" placeholder="আপনার মোবাইল নম্বর দিন">
+        <button onclick="login()">প্যানেল ওপেন করুন</button>
+    </div>
+
+    <div id="admin-section" class="hidden">
+        <h2>নতুন অর্ডারসমূহ</h2>
+        <div id="orders-list">অর্ডার লোড হচ্ছে...</div>
+        <button onclick="location.reload()" style="background:#666; margin-top:10px;">রিফ্রেশ করুন</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDpiRG3ZwxY9trXn4l4RPSdNDalaRzPmaU",
+        authDomain: "syed-kirana-shop.firebaseapp.com",
+        databaseURL: "https://syed-kirana-shop-default-rtdb.firebaseio.com",
+        projectId: "syed-kirana-shop"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.login = function() {
+        const num = document.getElementById('admin-num').value;
+        if (!num) return alert("নম্বর দিন!");
+        
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('admin-section').classList.remove('hidden');
+        
+        loadOrders(num);
+    }
+
+    function loadOrders(adminNum) {
+        const ordersRef = ref(db, 'orders');
+        onValue(ordersRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('orders-list');
+            container.innerHTML = "";
+
+            if (!data) {
+                container.innerHTML = "কোনো অর্ডার পাওয়া যায়নি।";
+                return;
+            }
+
+            // অর্ডারগুলো চেক করা
+            for (let id in data) {
+                const order = data[id];
+                
+                // শুধুমাত্র এই দোকানদারের নম্বর অনুযায়ী অর্ডার দেখানো
+                if (order.customerPhone === adminNum) {
+                    let itemsHtml = "";
+                    order.items.forEach(item => {
+                        itemsHtml += `<div class="item-row"><span>${item.name} (${item.qty} ${item.unit})</span><span>₹${item.total}</span></div>`;
+                    });
+
+                    container.innerHTML += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <span>ID: ${order.orderId}</span>
+                                <span>${order.time}</span>
+                            </div>
+                            <div>${itemsHtml}</div>
+                            <div class="total-bill">সর্বমোট বিল: ₹${order.grandTotal}</div>
+                        </div>
+                    `;
+                }
+            }
+            if(container.innerHTML === "") container.innerHTML = "আপনার নম্বরে কোনো অর্ডার নেই।";
+        });
+    }
+</script>
+</body>
+</html>
