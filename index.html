@@ -19,14 +19,17 @@
         /* Auth Pages Styling */
         .auth-container { text-align: center; padding: 20px; }
         .auth-container h2 { color: var(--primary); margin-bottom: 20px; }
-        .auth-input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .btn-auth { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
-        .auth-switch { margin-top: 20px; font-size: 14px; color: #555; cursor: pointer; text-decoration: underline; }
+        .auth-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
+        .btn-auth { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .auth-switch { margin-top: 15px; font-size: 14px; color: #555; cursor: pointer; text-decoration: underline; }
 
-        /* App Logic Styling */
-        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
-        #logout-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; }
+        /* Main App Styling */
+        .ad-container { margin: 15px 0; text-align: center; background: #f1f1f1; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        #ad-img { width: 100%; height: auto; transition: opacity 0.5s ease-in-out; display: block; border-radius: 8px; }
 
+        #install-row { display: none; background: #fff3e0; padding: 10px; border-radius: 10px; border: 1px solid #ffe0b2; margin-bottom: 15px; text-align: center; }
+        .btn-install { background: #e65100; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        
         .time-header { background: #fffde7; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; border: 1px solid #fbc02d; }
         #current-date { font-size: 14px; color: #555; display: block; font-weight: 500; }
         #current-time { font-size: 20px; color: var(--primary); font-weight: bold; display: block; }
@@ -39,28 +42,35 @@
         
         .hidden { display: none; }
         .item-row { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .item-name { font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #333; }
         .controls-grid { display: grid; grid-template-columns: 0.8fr 1.5fr 0.8fr; gap: 8px; margin-bottom: 8px; }
         
-        input[type="number"], select { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; }
+        input, select { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; }
         .total-box { background: #fffde7; padding: 8px; border-radius: 6px; text-align: right; font-weight: bold; color: #d32f2f; font-size: 14px; }
         
         .footer-btns { position: sticky; bottom: 0; background: white; padding: 15px 0; display: flex; gap: 10px; z-index: 10; }
-        .nav-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-back { background: #eceff1; color: #455a64; }
+        .btn-save { background: var(--primary); color: white; }
 
         .whatsapp-section { margin-top: auto; padding-top: 20px; border-top: 2px solid #eee; }
-        .btn-wa { background: #25D366; color: white; width: 100%; font-size: 18px; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; border: none; font-weight: bold; }
+        .wa-input-group { display: flex; gap: 8px; margin-bottom: 10px; }
+        .num-input { flex: 1; border: 2px solid #81c784; font-size: 16px; font-weight: bold; padding: 10px; border-radius: 8px; }
+        .btn-wa { background: #25D366; color: white; width: 100%; font-size: 18px; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; border: none; }
         
         .policy-footer { text-align: center; padding: 20px 0; margin-top: 10px; font-size: 13px; border-top: 1px solid #eee; }
+        .policy-footer a { color: #666; text-decoration: none; margin: 0 10px; font-weight: bold; }
+        #logout-btn { background: #d32f2f; color: white; padding: 5px 10px; font-size: 12px; border-radius: 5px; float: right; }
     </style>
 </head>
 <body>
 
 <div class="container">
-
+    
     <div id="login-page" class="auth-container">
         <h2>লগইন করুন</h2>
-        <input type="tel" id="login-phone" class="auth-input" placeholder="মোবাইল নম্বর" maxlength="10">
-        <input type="password" id="login-pass" class="auth-input" placeholder="৬-সংখ্যার পাসওয়ার্ড" maxlength="6">
+        <input type="email" id="login-email" class="auth-input" placeholder="ইমেল আইডি">
+        <input type="password" id="login-pass" class="auth-input" placeholder="পাসওয়ার্ড">
         <button class="btn-auth" onclick="handleLogin()">লগইন</button>
         <div class="auth-switch" onclick="switchAuth('register-page')">নতুন অ্যাকাউন্ট তৈরি করুন</div>
     </div>
@@ -68,20 +78,21 @@
     <div id="register-page" class="auth-container hidden">
         <h2>রেজিস্ট্রেশন</h2>
         <input type="text" id="reg-name" class="auth-input" placeholder="আপনার নাম">
-        <input type="tel" id="reg-phone" class="auth-input" placeholder="মোবাইল নম্বর" maxlength="10">
-        <input type="password" id="reg-pass" class="auth-input" placeholder="৬-সংখ্যার পাসওয়ার্ড" maxlength="6">
+        <input type="email" id="reg-email" class="auth-input" placeholder="ইমেল আইডি">
+        <input type="password" id="reg-pass" class="auth-input" placeholder="পাসওয়ার্ড">
         <button class="btn-auth" onclick="handleRegister()">অ্যাকাউন্ট তৈরি করুন</button>
         <div class="auth-switch" onclick="switchAuth('login-page')">ইতিমধ্যেই অ্যাকাউন্ট আছে? লগইন করুন</div>
     </div>
 
     <div id="app-content" class="hidden">
-        <div class="header-row">
-            <span id="user-display" style="font-weight: bold; color: var(--primary);"></span>
-            <button id="logout-btn" onclick="handleLogout()">Logout</button>
+        <button id="logout-btn" onclick="handleLogout()">Logout</button>
+        <div id="install-row">
+            <span style="font-size: 13px; margin-bottom: 5px; display: block;">অ্যাপটি ফোনে ইন্সটল করতে চান?</span>
+            <button class="btn-install" id="btn-install-app">ইন্সটল করুন</button>
         </div>
 
         <div class="time-header">
-            <span id="current-date">LOAD...</span>
+            <span id="current-date">লোড হচ্ছে...</span>
             <span id="current-time">00:00:00 AM</span>
         </div>
 
@@ -99,17 +110,22 @@
             <h1 id="cat-title">Items</h1>
             <div id="items-container"></div>
             <div class="footer-btns">
-                <button class="nav-btn" style="background: #eceff1;" onclick="goToHome()">Back</button>
-                <button class="nav-btn" style="background: var(--primary); color: white;" onclick="goToHome()">Save & Close</button>
+                <button class="btn-back" onclick="goToHome()">Back</button>
+                <button class="btn-save" onclick="goToHome()">Save & Close</button>
             </div>
         </div>
 
         <div class="whatsapp-section">
+            <label style="font-weight: bold; color: #555; font-size: 13px; margin-bottom: 5px; display: block;">নম্বর লিখুন:</label>
+            <div class="wa-input-group">
+                <input type="tel" id="wa-num" class="num-input" placeholder="91XXXXXXXXXX">
+            </div>
             <button class="btn-wa" onclick="sendWA()"><span>WhatsApp-এ অর্ডার দিন</span></button>
         </div>
     </div>
 
     <div class="policy-footer">
+        <a href="#">Privacy Policy</a> | <a href="mailto:syedalif2017@gmail.com">Contact Us</a>
         <p style="color: #666; margin-top: 10px;">&copy; 2026 Smart Grocery App</p>
     </div>
 </div>
@@ -124,29 +140,26 @@
 
     function handleRegister() {
         const name = document.getElementById('reg-name').value;
-        const phone = document.getElementById('reg-phone').value;
+        const email = document.getElementById('reg-email').value;
         const pass = document.getElementById('reg-pass').value;
 
-        if(!name || phone.length < 10 || pass.length < 6) {
-            return alert("সঠিক নাম, ১০ ডিজিট নম্বর এবং ৬ ডিজিট পাসওয়ার্ড দিন!");
-        }
+        if(!name || !email || !pass) return alert("সব তথ্য পূরণ করুন!");
         
-        const userData = { name, phone, pass };
-        localStorage.setItem('user_' + phone, JSON.stringify(userData));
-        alert("রেজিস্ট্রেশন সফল! লগইন করুন।");
+        const userData = { name, email, pass };
+        localStorage.setItem('user_' + email, JSON.stringify(userData));
+        alert("রেজিস্ট্রেশন সফল! এখন লগইন করুন।");
         switchAuth('login-page');
     }
 
     function handleLogin() {
-        const phone = document.getElementById('login-phone').value;
+        const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-pass').value;
 
-        const storedUser = localStorage.getItem('user_' + phone);
+        const storedUser = localStorage.getItem('user_' + email);
         if (storedUser) {
             const user = JSON.parse(storedUser);
             if (user.pass === pass) {
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('currentUserPhone', phone);
                 showApp();
             } else { alert("ভুল পাসওয়ার্ড!"); }
         } else { alert("অ্যাকাউন্ট পাওয়া যায়নি!"); }
@@ -156,10 +169,6 @@
         document.getElementById('login-page').classList.add('hidden');
         document.getElementById('register-page').classList.add('hidden');
         document.getElementById('app-content').classList.remove('hidden');
-        
-        const phone = localStorage.getItem('currentUserPhone');
-        const user = JSON.parse(localStorage.getItem('user_' + phone));
-        document.getElementById('user-display').innerText = "👤 " + user.name;
         init();
     }
 
@@ -168,24 +177,29 @@
         location.reload();
     }
 
+    // Check Login Status on Load
     window.onload = () => {
-        if(localStorage.getItem('isLoggedIn') === 'true') showApp();
+        if(localStorage.getItem('isLoggedIn') === 'true') {
+            showApp();
+        }
     };
 
-    // --- APP LOGIC ---
+    // --- ORIGINAL APP LOGIC ---
     function updateClock() {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').innerText = now.toLocaleDateString('bn-BD', options);
-        document.getElementById('current-time').innerText = now.toLocaleTimeString('bn-BD');
+        if(document.getElementById('current-date')) {
+            document.getElementById('current-date').innerText = now.toLocaleDateString('bn-BD', options);
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('bn-BD');
+        }
     }
     setInterval(updateClock, 1000);
 
     const data = {
         "A) নিত্যপ্রয়োজনীয় সবজি": ["আলু","পেঁয়াজ","আদা","রসুন","কাঁচা লঙ্কা"],
-        "B) ডাল ও শস্য": ["চাল","আটা","ময়দা","সর্ষের তেল","চিনি","চা পাতা","মুসুর ডাল"],
-        "C) মশলার তালিকা": ["হলুদ ","জিরে গুঁড়ো ","নুন / লবণ "],
-        "D) তাজা সবজি": ["টমেটো","পালং শাক","বেগুন","পটল"]
+        "B) ডাল ও শস্য": ["চাল","আটা","ময়দা","সর্ষের তেল","চিনি","চা পাতা","মুসুর ডাল","মুড়ি","গুড়","মটর","মুগ ডাল","ছোলা","অড়হর ডাল"],
+        "C) মশলার তালিকা": ["হলুদ ","কাশ্মীরি লঙ্কা গুঁড়ো","ধনে গুঁড়ো "," জিরে গুঁড়ো ","নুন / লবণ ","বিরিয়ানি মশলা","চিকেন মশলা","মিট মশলা / মাংসের মশলা","পোস্ত","সর্ষে","তেজপাতা","পাঁচ ফোড়ন","লবঙ্গ ","গরম মশলা ","শাহী গরম মশলা","মৌরি","গোলমরিচ","কালো জিরে ","হিং ","দারুচিনি","এলাচ","বড় এলাচ","কসুরি মেথি","জোয়ান","চাট মশলা","জায়ফল","জয়িত্রী"],
+        "D) তাজা সবজি": ["শসা","ধনে পাতা","লেবু","গাজর","বিট","শিম","টমেটো","পালং শাক","পুঁই শাক","লাল শাক","বেগুন","পটল","কাঁচকলা","করলা","কুমড়ো","ঢ্যাঁড়স","ফুলকপি","বাঁধাকপি","মুলো","মুলো শাক ","কলমি শাক ","সুশনি শাক","ওল","লাউ","ঝিঙে","পেপে","চিচিঙ্গা"]
     };
 
     let selectedItems = {};
@@ -213,33 +227,16 @@
             const saved = selectedItems[item] || { qty: '', unit: 'Kg', rate: '' };
             let div = document.createElement('div');
             div.className = 'item-row';
-            div.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:5px;">
-                    <input type="checkbox" id="chk-${item}" ${selectedItems[item]?'checked':''} onchange="handleInstantSelect('${item}')"> ${item}
-                </div>
-                <div class="controls-grid">
-                    <input type="number" id="q-${item}" placeholder="Qty" value="${saved.qty}" oninput="updatePrice('${item}')">
-                    <select id="u-${item}" onchange="updatePrice('${item}')">
-                        <option value="Kg" ${saved.unit==='Kg'?'selected':''}>Kg</option>
-                        <option value="Gm" ${saved.unit==='Gm'?'selected':''}>Gm</option>
-                        <option value="Pcs" ${saved.unit==='Pcs'?'selected':''}>Pcs</option>
-                    </select>
-                    <input type="number" id="r-${item}" placeholder="Rate" value="${saved.rate}" oninput="updatePrice('${item}')">
-                </div>
-                <div class="total-box">₹ <span id="t-${item}">0.00</span></div>
-            `;
+            div.innerHTML = `<div class="item-name"><input type="checkbox" id="chk-${item}" ${selectedItems[item]?'checked':''} onchange="handleInstantSelect('${item}')"> <label>${item}</label></div><div class="controls-grid"><input type="number" id="q-${item}" placeholder="Qty" value="${saved.qty}" oninput="updatePrice('${item}')"><select id="u-${item}" onchange="updatePrice('${item}')"><option value="Kg" ${saved.unit==='Kg'?'selected':''}>Kg</option><option value="Gm" ${saved.unit==='Gm'?'selected':''}>Gm</option><option value="Pcs" ${saved.unit==='Pcs'?'selected':''}>Pcs</option></select><input type="number" id="r-${item}" placeholder="Rate" value="${saved.rate}" oninput="updatePrice('${item}')"></div><div class="total-box">মোট দাম: ₹ <span id="t-${item}">0.00</span></div>`;
             container.appendChild(div);
             updatePrice(item);
         });
     }
 
     function handleInstantSelect(item) {
-        if (document.getElementById(`chk-${item}`).checked) {
-            selectedItems[item] = { 
-                qty: document.getElementById(`q-${item}`).value, 
-                unit: document.getElementById(`u-${item}`).value, 
-                rate: document.getElementById(`r-${item}`).value 
-            };
+        const isChecked = document.getElementById(`chk-${item}`).checked;
+        if (isChecked) {
+            selectedItems[item] = { qty: document.getElementById(`q-${item}`).value, unit: document.getElementById(`u-${item}`).value, rate: document.getElementById(`r-${item}`).value };
         } else { delete selectedItems[item]; }
     }
 
@@ -252,11 +249,7 @@
         if (selectedItems[item]) { selectedItems[item].qty = q; selectedItems[item].unit = u; selectedItems[item].rate = r; }
     }
 
-    function goToHome() { 
-        document.getElementById('home-page').classList.remove('hidden'); 
-        document.getElementById('items-page').classList.add('hidden'); 
-        updateSummaryView(); 
-    }
+    function goToHome() { document.getElementById('home-page').classList.remove('hidden'); document.getElementById('items-page').classList.add('hidden'); updateSummaryView(); }
     
     function toggleSummary() { 
         const view = document.getElementById('summary-view'); 
@@ -281,12 +274,9 @@
     }
 
     function sendWA() {
-        const phone = localStorage.getItem('currentUserPhone');
-        const user = JSON.parse(localStorage.getItem('user_' + phone));
-        
-        let msg = "*🛒 নতুন বাজার অর্ডার*\n------------------\n";
-        msg += `👤 কাস্টমার: *${user.name}*\n📞 মোবাইল: ${user.phone}\n📅 তারিখ: ${document.getElementById('current-date').innerText}\n------------------\n`;
-        
+        const num = document.getElementById('wa-num').value;
+        if(!num) return alert("নম্বর দিন!");
+        let msg = "*🛒 বাজার লিস্ট ও বিল:*\n" + document.getElementById('current-date').innerText + "\n--------------------------\n";
         let grandTotal = 0; let hasItems = false;
         for (let key in selectedItems) {
             let itm = selectedItems[key];
@@ -297,11 +287,8 @@
             }
         }
         if(!hasItems) return alert("আইটেম সিলেক্ট করুন!");
-        msg += `\n\n------------------\n💰 *সর্বমোট বিল: ₹${grandTotal.toFixed(2)}*`;
-        
-        // Aap yahan apna WhatsApp number daal sakte hain
-        const adminNumber = "91XXXXXXXXXX"; 
-        window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(msg)}`);
+        msg += `\n\n*--------------------------*\n💰 *সর্বমোট বিল: ₹${grandTotal.toFixed(2)}*`;
+        window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`);
     }
 </script>
 </body>
