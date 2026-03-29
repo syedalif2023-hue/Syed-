@@ -1,86 +1,308 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syed Kirana - Login System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Grocery App</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFD700">
+
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding-top: 50px; }
-        .box { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 320px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .reg-btn { background: #28a745; color: white; }
-        .log-btn { background: #007bff; color: white; }
-        .toggle-link { color: #007bff; cursor: pointer; font-size: 14px; margin-top: 15px; display: block; }
+        :root { --primary: #1b5e20; --bg: #FFD700; --secondary: #e65100; }
+        * { box-sizing: border-box; }
+        
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 10px; margin: 0; }
+
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); min-height: 96vh; display: flex; flex-direction: column; }
+
+        /* Auth Pages Styling */
+        .auth-container { text-align: center; padding: 20px; }
+        .auth-container h2 { color: var(--primary); margin-bottom: 20px; }
+        .auth-input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn-auth { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .auth-switch { margin-top: 20px; font-size: 14px; color: #555; cursor: pointer; text-decoration: underline; }
+
+        /* App Logic Styling */
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
+        #logout-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; }
+
+        .time-header { background: #fffde7; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; border: 1px solid #fbc02d; }
+        #current-date { font-size: 14px; color: #555; display: block; font-weight: 500; }
+        #current-time { font-size: 20px; color: var(--primary); font-weight: bold; display: block; }
+
+        h1 { text-align: center; color: var(--primary); font-size: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; margin-bottom: 10px; }
+        .btn-summary { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
+        
+        .summary-card { background: #fff9c4; border: 2px dashed #fbc02d; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 14px; }
+        .category-item { background: #f9fbe7; margin: 10px 0; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; border: 1px solid #dcedc8; }
+        
+        .hidden { display: none; }
+        .item-row { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .controls-grid { display: grid; grid-template-columns: 0.8fr 1.5fr 0.8fr; gap: 8px; margin-bottom: 8px; }
+        
+        input[type="number"], select { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; }
+        .total-box { background: #fffde7; padding: 8px; border-radius: 6px; text-align: right; font-weight: bold; color: #d32f2f; font-size: 14px; }
+        
+        .footer-btns { position: sticky; bottom: 0; background: white; padding: 15px 0; display: flex; gap: 10px; z-index: 10; }
+        .nav-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        .whatsapp-section { margin-top: auto; padding-top: 20px; border-top: 2px solid #eee; }
+        .btn-wa { background: #25D366; color: white; width: 100%; font-size: 18px; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; border: none; font-weight: bold; }
+        
+        .policy-footer { text-align: center; padding: 20px 0; margin-top: 10px; font-size: 13px; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2 id="title">Create Account</h2>
-    
-    <input type="text" id="custName" placeholder="Full Name (For Register Only)">
-    <input type="number" id="mobile" placeholder="Mobile Number">
-    <input type="password" id="pass" placeholder="Password (Min 6 letters)">
+<div class="container">
 
-    <div id="action-area">
-        <button class="reg-btn" onclick="handleRegister()">Register Now</button>
-        <span class="toggle-link" onclick="showLogin()">Already have account? Login</span>
+    <div id="login-page" class="auth-container">
+        <h2>লগইন করুন</h2>
+        <input type="tel" id="login-phone" class="auth-input" placeholder="মোবাইল নম্বর" maxlength="10">
+        <input type="password" id="login-pass" class="auth-input" placeholder="৬-সংখ্যার পাসওয়ার্ড" maxlength="6">
+        <button class="btn-auth" onclick="handleLogin()">লগইন</button>
+        <div class="auth-switch" onclick="switchAuth('register-page')">নতুন অ্যাকাউন্ট তৈরি করুন</div>
     </div>
 
-    <p id="status" style="margin-top:15px; font-size:14px;"></p>
+    <div id="register-page" class="auth-container hidden">
+        <h2>রেজিস্ট্রেশন</h2>
+        <input type="text" id="reg-name" class="auth-input" placeholder="আপনার নাম">
+        <input type="tel" id="reg-phone" class="auth-input" placeholder="মোবাইল নম্বর" maxlength="10">
+        <input type="password" id="reg-pass" class="auth-input" placeholder="৬-সংখ্যার পাসওয়ার্ড" maxlength="6">
+        <button class="btn-auth" onclick="handleRegister()">অ্যাকাউন্ট তৈরি করুন</button>
+        <div class="auth-switch" onclick="switchAuth('login-page')">ইতিমধ্যেই অ্যাকাউন্ট আছে? লগইন করুন</div>
+    </div>
+
+    <div id="app-content" class="hidden">
+        <div class="header-row">
+            <span id="user-display" style="font-weight: bold; color: var(--primary);"></span>
+            <button id="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="time-header">
+            <span id="current-date">LOAD...</span>
+            <span id="current-time">00:00:00 AM</span>
+        </div>
+
+        <div id="home-page">
+            <h1>সব ধরনের সামগ্রী লিস্ট</h1>
+            <button class="btn-summary" onclick="toggleSummary()">অর্ডার সামারি দেখুন</button>
+            <div id="summary-view" class="summary-card hidden">
+                <div id="summary-content">কোনো আইটেম সিলেক্ট করা নেই।</div>
+                <div id="summary-total" style="text-align:right; font-weight:bold; color:#d32f2f; margin-top:10px; border-top:1px solid #ffd54f; padding-top:5px;"></div>
+            </div>
+            <div id="category-list"></div>
+        </div>
+
+        <div id="items-page" class="hidden">
+            <h1 id="cat-title">Items</h1>
+            <div id="items-container"></div>
+            <div class="footer-btns">
+                <button class="nav-btn" style="background: #eceff1;" onclick="goToHome()">Back</button>
+                <button class="nav-btn" style="background: var(--primary); color: white;" onclick="goToHome()">Save & Close</button>
+            </div>
+        </div>
+
+        <div class="whatsapp-section">
+            <button class="btn-wa" onclick="sendWA()"><span>WhatsApp-এ অর্ডার দিন</span></button>
+        </div>
+    </div>
+
+    <div class="policy-footer">
+        <p style="color: #666; margin-top: 10px;">&copy; 2026 Smart Grocery App</p>
+    </div>
 </div>
 
-<script type="module" src="firebase-config.js"></script>
-
 <script>
-    let isLoginMode = false;
-
-    function showLogin() {
-        isLoginMode = true;
-        document.getElementById('title').innerText = "User Login";
-        document.getElementById('custName').style.display = 'none';
-        document.getElementById('action-area').innerHTML = `
-            <button class="log-btn" onclick="handleLogin()">Login</button>
-            <span class="toggle-link" onclick="location.reload()">New user? Register</span>
-        `;
+    // --- AUTH LOGIC ---
+    function switchAuth(pageId) {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('register-page').classList.add('hidden');
+        document.getElementById(pageId).classList.remove('hidden');
     }
 
     function handleRegister() {
-        const mobile = document.getElementById('mobile').value;
-        const pass = document.getElementById('pass').value;
-        const status = document.getElementById('status');
+        const name = document.getElementById('reg-name').value;
+        const phone = document.getElementById('reg-phone').value;
+        const pass = document.getElementById('reg-pass').value;
 
-        if(mobile.length < 10 || pass.length < 6) {
-            alert("Mobile 10 digit aur Password 6 digit ka hona chahiye!");
-            return;
+        if(!name || phone.length < 10 || pass.length < 6) {
+            return alert("সঠিক নাম, ১০ ডিজিট নম্বর এবং ৬ ডিজিট পাসওয়ার্ড দিন!");
         }
-
-        registerUser(mobile, pass).then(() => {
-            status.innerText = "Registration Success! Ab login karein.";
-            status.style.color = "green";
-            showLogin();
-        }).catch(err => {
-            status.innerText = "Error: " + err.message;
-            status.style.color = "red";
-        });
+        
+        const userData = { name, phone, pass };
+        localStorage.setItem('user_' + phone, JSON.stringify(userData));
+        alert("রেজিস্ট্রেশন সফল! লগইন করুন।");
+        switchAuth('login-page');
     }
 
     function handleLogin() {
-        const mobile = document.getElementById('mobile').value;
-        const pass = document.getElementById('pass').value;
-        const status = document.getElementById('status');
+        const phone = document.getElementById('login-phone').value;
+        const pass = document.getElementById('login-pass').value;
 
-        loginUser(mobile, pass).then((res) => {
-            alert("Welcome! Login Successful.");
-            status.innerText = "Logged in as: " + mobile;
-            // Dashboard par bhejne ke liye: window.location.href = "dashboard.html";
-        }).catch(err => {
-            status.innerText = "Login Failed: Check Number/Password";
-            status.style.color = "red";
+        const storedUser = localStorage.getItem('user_' + phone);
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            if (user.pass === pass) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUserPhone', phone);
+                showApp();
+            } else { alert("ভুল পাসওয়ার্ড!"); }
+        } else { alert("অ্যাকাউন্ট পাওয়া যায়নি!"); }
+    }
+
+    function showApp() {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('register-page').classList.add('hidden');
+        document.getElementById('app-content').classList.remove('hidden');
+        
+        const phone = localStorage.getItem('currentUserPhone');
+        const user = JSON.parse(localStorage.getItem('user_' + phone));
+        document.getElementById('user-display').innerText = "👤 " + user.name;
+        init();
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('isLoggedIn');
+        location.reload();
+    }
+
+    window.onload = () => {
+        if(localStorage.getItem('isLoggedIn') === 'true') showApp();
+    };
+
+    // --- APP LOGIC ---
+    function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').innerText = now.toLocaleDateString('bn-BD', options);
+        document.getElementById('current-time').innerText = now.toLocaleTimeString('bn-BD');
+    }
+    setInterval(updateClock, 1000);
+
+    const data = {
+        "A) নিত্যপ্রয়োজনীয় সবজি": ["আলু","পেঁয়াজ","আদা","রসুন","কাঁচা লঙ্কা"],
+        "B) ডাল ও শস্য": ["চাল","আটা","ময়দা","সর্ষের তেল","চিনি","চা পাতা","মুসুর ডাল"],
+        "C) মশলার তালিকা": ["হলুদ ","জিরে গুঁড়ো ","নুন / লবণ "],
+        "D) তাজা সবজি": ["টমেটো","পালং শাক","বেগুন","পটল"]
+    };
+
+    let selectedItems = {};
+
+    function init() {
+        const list = document.getElementById('category-list');
+        list.innerHTML = '';
+        for (let cat in data) {
+            let d = document.createElement('div');
+            d.className = 'category-item';
+            d.innerHTML = `<span>${cat}</span> <span>➔</span>`;
+            d.onclick = () => showCat(cat);
+            list.appendChild(d);
+        }
+        updateClock();
+    }
+
+    function showCat(cat) {
+        document.getElementById('home-page').classList.add('hidden');
+        document.getElementById('items-page').classList.remove('hidden');
+        document.getElementById('cat-title').innerText = cat;
+        const container = document.getElementById('items-container');
+        container.innerHTML = '';
+        data[cat].forEach(item => {
+            const saved = selectedItems[item] || { qty: '', unit: 'Kg', rate: '' };
+            let div = document.createElement('div');
+            div.className = 'item-row';
+            div.innerHTML = `
+                <div style="font-weight:bold; margin-bottom:5px;">
+                    <input type="checkbox" id="chk-${item}" ${selectedItems[item]?'checked':''} onchange="handleInstantSelect('${item}')"> ${item}
+                </div>
+                <div class="controls-grid">
+                    <input type="number" id="q-${item}" placeholder="Qty" value="${saved.qty}" oninput="updatePrice('${item}')">
+                    <select id="u-${item}" onchange="updatePrice('${item}')">
+                        <option value="Kg" ${saved.unit==='Kg'?'selected':''}>Kg</option>
+                        <option value="Gm" ${saved.unit==='Gm'?'selected':''}>Gm</option>
+                        <option value="Pcs" ${saved.unit==='Pcs'?'selected':''}>Pcs</option>
+                    </select>
+                    <input type="number" id="r-${item}" placeholder="Rate" value="${saved.rate}" oninput="updatePrice('${item}')">
+                </div>
+                <div class="total-box">₹ <span id="t-${item}">0.00</span></div>
+            `;
+            container.appendChild(div);
+            updatePrice(item);
         });
     }
-</script>
 
+    function handleInstantSelect(item) {
+        if (document.getElementById(`chk-${item}`).checked) {
+            selectedItems[item] = { 
+                qty: document.getElementById(`q-${item}`).value, 
+                unit: document.getElementById(`u-${item}`).value, 
+                rate: document.getElementById(`r-${item}`).value 
+            };
+        } else { delete selectedItems[item]; }
+    }
+
+    function updatePrice(item) {
+        const q = parseFloat(document.getElementById(`q-${item}`).value) || 0;
+        const u = document.getElementById(`u-${item}`).value;
+        const r = parseFloat(document.getElementById(`r-${item}`).value) || 0;
+        let total = (u === "Gm") ? (r / 1000) * q : q * r;
+        if(document.getElementById(`t-${item}`)) document.getElementById(`t-${item}`).innerText = total.toFixed(2);
+        if (selectedItems[item]) { selectedItems[item].qty = q; selectedItems[item].unit = u; selectedItems[item].rate = r; }
+    }
+
+    function goToHome() { 
+        document.getElementById('home-page').classList.remove('hidden'); 
+        document.getElementById('items-page').classList.add('hidden'); 
+        updateSummaryView(); 
+    }
+    
+    function toggleSummary() { 
+        const view = document.getElementById('summary-view'); 
+        view.classList.toggle('hidden'); 
+        updateSummaryView(); 
+    }
+
+    function updateSummaryView() {
+        const content = document.getElementById('summary-content');
+        const totalDiv = document.getElementById('summary-total');
+        let html = ""; let grandTotal = 0; let hasItems = false;
+        for (let key in selectedItems) {
+            let itm = selectedItems[key];
+            if(itm.qty > 0) {
+                let itemTotal = itm.unit === "Gm" ? (itm.rate/1000)*itm.qty : itm.qty*itm.rate;
+                html += `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>✅ ${key} (${itm.qty} ${itm.unit})</span><span>₹${itemTotal.toFixed(2)}</span></div>`;
+                grandTotal += itemTotal; hasItems = true;
+            }
+        }
+        if(!hasItems) { content.innerHTML = "কোনো আইটেম সিলেক্ট করা নেই।"; totalDiv.innerText = ""; }
+        else { content.innerHTML = html; totalDiv.innerText = "মোট বিল: ₹" + grandTotal.toFixed(2); }
+    }
+
+    function sendWA() {
+        const phone = localStorage.getItem('currentUserPhone');
+        const user = JSON.parse(localStorage.getItem('user_' + phone));
+        
+        let msg = "*🛒 নতুন বাজার অর্ডার*\n------------------\n";
+        msg += `👤 কাস্টমার: *${user.name}*\n📞 মোবাইল: ${user.phone}\n📅 তারিখ: ${document.getElementById('current-date').innerText}\n------------------\n`;
+        
+        let grandTotal = 0; let hasItems = false;
+        for (let key in selectedItems) {
+            let itm = selectedItems[key];
+            if(itm.qty > 0) {
+                let itemTotal = itm.unit === "Gm" ? (itm.rate/1000)*itm.qty : itm.qty*itm.rate;
+                msg += `\n✅ *${key}*\n${itm.qty} ${itm.unit} x ${itm.rate} = *₹${itemTotal.toFixed(2)}*`;
+                grandTotal += itemTotal; hasItems = true;
+            }
+        }
+        if(!hasItems) return alert("আইটেম সিলেক্ট করুন!");
+        msg += `\n\n------------------\n💰 *সর্বমোট বিল: ₹${grandTotal.toFixed(2)}*`;
+        
+        // Aap yahan apna WhatsApp number daal sakte hain
+        const adminNumber = "91XXXXXXXXXX"; 
+        window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(msg)}`);
+    }
+</script>
 </body>
 </html>
