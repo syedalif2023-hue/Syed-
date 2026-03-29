@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="bn">
-<head>
+<<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b5e20">
+
+<style>
+    #install-row { 
+        display: none; 
+        background: #fff3e0; 
+        padding: 10px; 
+        border-radius: 10px; 
+        border: 1px solid #ffe0b2; 
+        margin-bottom: 15px; 
+        text-align: center; 
+    }
+    .btn-install { 
+        background: #e65100; 
+        color: white; 
+        border: none; 
+        padding: 8px 15px; 
+        border-radius: 5px; 
+        font-weight: bold; 
+        cursor: pointer; 
+    }
+</style>
+>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kirana Admin Panel</title>
@@ -97,6 +120,30 @@
             if(container.innerHTML === "") container.innerHTML = "আপনার নম্বরে কোনো অর্ডার নেই।";
         });
     }
-</script>
+</let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-row').style.display = 'block';
+});
+
+document.getElementById('btn-install-admin').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            document.getElementById('install-row').style.display = 'none';
+        }
+        deferredPrompt = null;
+    }
+});
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+    });
+}
+>
 </body>
 </html>
