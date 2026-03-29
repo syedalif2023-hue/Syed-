@@ -1,6 +1,6 @@
 // firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDpiRG3ZwxY9trXn4l4RPSdNDalaRzPmaU",
@@ -9,21 +9,20 @@ const firebaseConfig = {
   projectId: "syed-kirana-shop",
   storageBucket: "syed-kirana-shop.firebasestorage.app",
   messagingSenderId: "152414262069",
-  appId: "1:152414262069:web:a27ddda6004db29fdbf27c",
-  measurementId: "G-39CX20F612"
+  appId: "1:152414262069:web:a27ddda6004db29fdbf27c"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Functions for the form
-window.initRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'normal'
-    });
+// Register Function
+window.registerUser = (mobile, password) => {
+    const fakeEmail = mobile + "@syed.com"; // Number ko email format banaya
+    return createUserWithEmailAndPassword(auth, fakeEmail, password);
 };
 
-window.sendOTP = (phone) => {
-    return signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+// Login Function
+window.loginUser = (mobile, password) => {
+    const fakeEmail = mobile + "@syed.com";
+    return signInWithEmailAndPassword(auth, fakeEmail, password);
 };
